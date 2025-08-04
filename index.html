@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -34,6 +35,1826 @@
             left: 0;
             width: 100%;
             height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9));
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.5s ease;
+        }
+        
+        /* 顶部控制按钮 */
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 100;
+        }
+        
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .btn i {
+            font-size: 18px;
+        }
+        
+        /* 中央区域 - 时间和随机文本 */
+        .center-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            margin-top: 5vh;
+        }
+        
+        .time-display {
+            font-size: 8vw;
+            font-weight: 300;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            margin-bottom: 10px;
+            transition: all 0.5s ease;
+        }
+        
+        .date-display {
+            font-size: 2.5vw;
+            font-weight: 300;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            transition: all 0.5s ease;
+        }
+        
+        .random-text-container {
+            max-width: 90%;
+            margin: 0 auto;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .random-text {
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.9;
+            transition: all 0.5s ease;
+            max-width: 95%;
+            word-wrap: break-word;
+            line-height: 1.5;
+            padding: 15px 25px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-height: 50vh;
+            overflow-y: auto;
+            transition: all 0.5s ease;
+            padding: 20px 0;
+            opacity: 1;
+            transform: translateY(0);
+            margin-top: 5vh;
+        }
+        
+        .content-container.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            max-height: 0;
+            padding: 0;
+            overflow: hidden;
+            margin-top: 0;
+        }
+        
+        .search-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto 40px;
+            position: relative;
+            transition: all 0.5s ease;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.1rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            max-height: 35vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.2) transparent;
+            transition: all 0.5s ease;
+        }
+        
+        .quick-links::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .quick-links::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+        
+        .link-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex: 0 0 calc(20% - 20px);
+            min-width: 100px;
+            max-width: 120px;
+        }
+        
+        .link-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+        
+        .link-item .icon-container {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .link-item .icon-container i {
+            font-size: 24px;
+        }
+        
+        .link-item .icon-container img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 50%;
+        }
+        
+        .link-item span {
+            font-size: 0.9rem;
+        }
+        
+        .delete-link {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+        
+        .link-item:hover .delete-link {
+            opacity: 1;
+        }
+        
+        .edit-link {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 20px;
+            height: 20px;
+            background: rgba(0, 123, 255, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+        
+        .link-item:hover .edit-link {
+            opacity: 1;
+        }
+        
+        /* 设置面板 */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: rgba(30, 30, 40, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            z-index: 200;
+            overflow-y: auto;
+            transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        .settings-panel.open {
+            right: 0;
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .settings-header h2 {
+            font-weight: 400;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .settings-group {
+            margin-bottom: 30px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .settings-group h3 {
+            font-weight: 400;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .settings-group h3 i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .color-option.active {
+            border-color: white;
+            transform: scale(1.1);
+        }
+        
+        .font-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .font-option {
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .font-option.active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .animation-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .animation-option {
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .animation-option.active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .slider-container {
+            margin: 15px 0;
+        }
+        
+        .slider-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .btn-primary {
+            background: #4a6cf7;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background: #3a5ce0;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+        
+        .btn-danger {
+            background: #ff4757;
+        }
+        
+        .btn-success {
+            background: #2ed573;
+        }
+        
+        .custom-items-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .custom-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        
+        .custom-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .custom-item .actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-icon {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1.5s ease-in-out forwards;
+        }
+        
+        .slide-up {
+            animation: slideUp 1s ease-out forwards;
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: 
+                typewriter 4s steps(40, end),
+                blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #fff; }
+        }
+        
+        .fade-out {
+            animation: fadeIn 1.5s ease-in-out reverse forwards;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .time-display {
+                font-size: 12vw;
+            }
+            
+            .date-display {
+                font-size: 4vw;
+            }
+            
+            .random-text {
+                font-size: 1.4rem;
+            }
+            
+            .settings-panel {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .quick-links {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .link-item {
+                flex: 0 0 calc(33% - 20px);
+            }
+        }
+        
+        /* 状态提示 */
+        .status-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            animation: fadeIn 0.5s ease-in-out;
+            display: none;
+        }
+        
+        /* 背景加载指示器 */
+        .bg-loader {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        /* 编辑模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: rgba(40, 40, 50, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .scroll-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.2rem;
+            animation: bounce 2s infinite;
+            opacity: 0.7;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+            40% {transform: translateX(-50%) translateY(-15px);}
+            60% {transform: translateX(-50%) translateY(-7px);}
+        }
+        
+        /* 显示控制按钮 */
+        .visibility-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 15px;
+        }
+        
+        .visibility-control:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .toggle-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 20px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.2);
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .toggle-btn.active {
+            background: #4a6cf7;
+        }
+        
+        .toggle-btn::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            transition: all 0.3s ease;
+            left: 2px;
+        }
+        
+        .toggle-btn.active::before {
+            left: calc(100% - 18px);
+        }
+    </style>
+</head>
+<body>
+    <div id="background-overlay"></div>
+    
+    <div class="bg-loader" id="bg-loader">
+        <i class="fas fa-sync fa-spin"></i> 正在加载背景...
+    </div>
+    
+    <div class="status-message" id="status-message"></div>
+    
+    <div class="container">
+        <div class="controls">
+            <button class="btn" id="fullscreen-btn" title="全屏">
+                <i class="fas fa-expand"></i>
+            </button>
+            <button class="btn" id="settings-btn" title="设置">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+        
+        <div class="center-container">
+            <div class="time-display" id="time">00:00:00</div>
+            <div class="date-display" id="date">2025年1月1日 星期一</div>
+            
+            <div class="random-text-container">
+                <div class="random-text" id="random-text">Just Do It.</div>
+            </div>
+        </div>
+        
+        <div class="scroll-hint" id="scroll-hint">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        
+        <div class="content-container" id="content-container">
+            <div class="search-container" id="search-container">
+                <input type="text" class="search-box" placeholder="搜索互联网..." id="search-input">
+            </div>
+            
+            <div class="quick-links" id="quick-links">
+            </div>
+        </div>
+    </div>
+    
+    <!-- 设置面板 -->
+    <div class="settings-panel" id="settings-panel">
+        <div class="settings-header">
+            <h2>仪表盘设置</h2>
+            <button class="close-btn" id="close-settings">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-clock"></i> 时间显示设置</h3>
+            
+            <div class="color-picker">
+                <div class="color-option active" style="background: #ffffff;" data-color="#ffffff"></div>
+                <div class="color-option" style="background: #ff6b6b;" data-color="#ff6b6b"></div>
+                <div class="color-option" style="background: #4ecdc4;" data-color="#4ecdc4"></div>
+                <div class="color-option" style="background: #ffe66d;" data-color="#ffe66d"></div>
+                <div class="color-option" style="background: #ff9f68;" data-color="#ff9f68"></div>
+                <div class="color-option" style="background: #9b5de5;" data-color="#9b5de5"></div>
+                <div class="color-option" style="background: #00bbf9;" data-color="#00bbf9"></div>
+                <div class="color-option" style="background: #00f5d4;" data-color="#00f5d4"></div>
+            </div>
+            
+            <div class="font-selector">
+                <div class="font-option active" data-font="Segoe UI">默认</div>
+                <div class="font-option" data-font="Arial">Arial</div>
+                <div class="font-option" data-font="Georgia">Georgia</div>
+                <div class="font-option" data-font="Courier New">Courier</div>
+                <div class="font-option" data-font="Impact">Impact</div>
+                <div class="font-option" data-font="Times New Roman">Times</div>
+                <div class="font-option" data-font="Verdana">Verdana</div>
+                <div class="font-option" data-font="Comic Sans MS">Comic</div>
+            </div>
+            
+            <div class="slider-container">
+                <label for="time-size">时间字体大小: <span id="time-size-value">8vw</span></label>
+                <input type="range" id="time-size" min="5" max="15" value="8" step="0.5">
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-font"></i> 文字动画效果</h3>
+            
+            <div class="animation-selector">
+                <div class="animation-option active" data-animation="fadeIn">淡入效果</div>
+                <div class="animation-option" data-animation="slideUp">上浮效果</div>
+                <div class="animation-option" data-animation="typewriter">打字机效果</div>
+                <div class="animation-option" data-animation="fade-out">淡出效果</div>
+            </div>
+            
+            <div class="slider-container">
+                <label for="text-change">文字切换间隔: <span id="text-change-value">10</span> 秒</label>
+                <input type="range" id="text-change" min="5" max="30" value="10">
+            </div>
+            
+            <!-- 随机文本显示控制按钮 -->
+            <div class="visibility-control">
+                <span>显示随机文本</span>
+                <div class="toggle-btn active" id="toggle-text-btn">
+                    <span class="toggle-switch"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-search"></i> 搜索引擎设置</h3>
+            
+            <div class="animation-selector" id="search-engine-selector">
+                <!-- 搜索引擎选项将通过JavaScript动态生成 -->
+            </div>
+            
+            <!-- 搜索栏显示控制按钮 -->
+            <div class="visibility-control">
+                <span>显示搜索栏</span>
+                <div class="toggle-btn active" id="toggle-search-btn">
+                    <span class="toggle-switch"></span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="new-engine-name">添加自定义搜索引擎</label>
+                <input type="text" class="form-control" id="new-engine-name" placeholder="搜索引擎名称">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" class="form-control" id="new-engine-url" placeholder="搜索URL (使用{query}作为搜索词)">
+            </div>
+            
+            <button class="btn-primary" id="add-engine-btn">
+                <i class="fas fa-plus"></i> 添加搜索引擎
+            </button>
+            
+            <div class="custom-items-list" id="custom-engines-list">
+                <!-- 自定义搜索引擎列表将通过JavaScript动态生成 -->
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-link"></i> 快捷链接设置</h3>
+            
+            <!-- 快捷链接显示控制按钮 -->
+            <div class="visibility-control">
+                <span>显示快捷链接</span>
+                <div class="toggle-btn active" id="toggle-links-btn">
+                    <span class="toggle-switch"></span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="new-link-name">链接名称</label>
+                <input type="text" class="form-control" id="new-link-name" placeholder="例如: GitHub">
+            </div>
+            
+            <div class="form-group">
+                <label for="new-link-url">链接地址</label>
+                <input type="text" class="form-control" id="new-link-url" placeholder="https://example.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="new-link-icon">图标 (Font Awesome类名或图片URL)</label>
+                <input type="text" class="form-control" id="new-link-icon" placeholder="例如: fab fa-github 或 https://example.com/icon.png">
+            </div>
+            
+            <button class="btn-primary" id="add-link-btn">
+                <i class="fas fa-plus"></i> 添加快捷链接
+            </button>
+            
+            <div class="custom-items-list" id="custom-links-list">
+                <!-- 自定义链接列表将通过JavaScript动态生成 -->
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-quote-right"></i> 随机文本设置</h3>
+            
+            <div class="form-group">
+                <label for="new-quote-text">添加自定义文本</label>
+                <textarea class="form-control" id="new-quote-text" placeholder="输入您喜欢的名言或句子..." rows="3"></textarea>
+            </div>
+            
+            <button class="btn-primary" id="add-quote-btn">
+                <i class="fas fa-plus"></i> 添加文本
+            </button>
+            
+            <div class="custom-items-list" id="custom-quotes-list">
+                <!-- 自定义文本列表将通过JavaScript动态生成 -->
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-image"></i> 背景设置</h3>
+            
+            <div class="form-group">
+                <label for="bg-api">背景图片API</label>
+                <input type="text" class="form-control" id="bg-api" value="https://source.unsplash.com/random/1920x1080/?nature" placeholder="输入背景图片API">
+            </div>
+            
+            <div class="slider-container">
+                <label for="bg-change">背景切换间隔: <span id="bg-change-value">30</span> 秒</label>
+                <input type="range" id="bg-change" min="10" max="120" value="30">
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn-primary btn-sm" id="update-bg-btn">
+                    <i class="fas fa-sync"></i> 更新背景
+                </button>
+                <button class="btn-primary btn-sm btn-success" id="bg-toggle-btn">
+                    <i class="fas fa-play"></i> 切换背景
+                </button>
+                <button class="btn-primary btn-sm btn-danger" id="stop-bg-btn">
+                    <i class="fas fa-stop"></i> 停止切换
+                </button>
+            </div>
+        </div>
+        <footer style="margin-top: 20px; font-size: 0.8rem; color: #666; text-align: center;"> &copy; <script>document.write(new Date().getFullYear())</script> FastNow Studio | MIT-Clause</footer>
+    </div>
+    
+    <!-- 这啥？ -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="edit-modal-title">编辑项目</h3>
+                <button class="modal-close" id="close-edit-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="edit-form-container">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="save-edit-btn">保存更改</button>
+                <button class="btn-primary btn-danger" id="cancel-edit-btn">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const timeElement = document.getElementById('time');
+        const dateElement = document.getElementById('date');
+        const randomTextElement = document.getElementById('random-text');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+        const closeSettingsBtn = document.getElementById('close-settings');
+        const searchInput = document.getElementById('search-input');
+        const quickLinksContainer = document.getElementById('quick-links');
+        const statusMessage = document.getElementById('status-message');
+        const bgLoader = document.getElementById('bg-loader');
+        const toggleTextBtn = document.getElementById('toggle-text-btn');
+        const toggleSearchBtn = document.getElementById('toggle-search-btn');
+        const toggleLinksBtn = document.getElementById('toggle-links-btn');
+        const editModal = document.getElementById('edit-modal');
+        const closeEditModal = document.getElementById('close-edit-modal');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+        const saveEditBtn = document.getElementById('save-edit-btn');
+        const editFormContainer = document.getElementById('edit-form-container');
+        const contentContainer = document.getElementById('content-container');
+        const scrollHint = document.getElementById('scroll-hint');
+        const searchContainer = document.getElementById('search-container');
+        
+        // 状态变量
+        let bgInterval;
+        let bgSwitching = true;
+        let textInterval;
+        let textVisible = true;
+        let searchVisible = true;
+        let linksVisible = true;
+        let currentEditItem = null;
+        let currentEditType = null;
+        let currentEditIndex = null;
+        let scrollPosition = 0;
+        
+        // 初始化
+        let quotes = [
+            {id: 1, text: "生活就像骑自行车，为了保持平衡，你必须不断前进"},
+            {id: 2, text: "每一天都是新的开始，珍惜当下"},
+            {id: 3, text: "成功不是终点，失败不是终结，勇气才是永恒"},
+            {id: 4, text: "梦想不会发光，发光的是追梦的人"},
+            {id: 5, text: "最好的时光就是现在"},
+            {id: 6, text: "简单的事情重复做，你就是专家；重复的事情用心做，你就是赢家"},
+            {id: 7, text: "行动是治愈恐惧的良药，而犹豫拖延将不断滋养恐惧"},
+            {id: 8, text: "只有不断超越自我，才能成就非凡"},
+            {id: 9, text: "生命不是要超越别人，而是要超越自己"},
+            {id: 10, text: "不要等待机会，而要创造机会"}
+        ];
+        
+        let searchEngines = [
+            { name: "Google", url: "https://www.google.com/search?q={query}" },
+            { name: "Bing", url: "https://www.bing.com/search?q={query}" },
+            { name: "DuckDuckGo", url: "https://duckduckgo.com/?q={query}" },
+            { name: "百度", url: "https://www.baidu.com/s?wd={query}" }
+        ];
+        
+        let quickLinks = [
+            { id: 1, name: "GitHub", url: "https://github.com", icon: "fab fa-github", type: "fa" },
+            { id: 2, name: "Gmail", url: "https://gmail.com", icon: "fas fa-envelope", type: "fa" },
+            { id: 3, name: "YouTube", url: "https://youtube.com", icon: "fab fa-youtube", type: "fa" },
+            { id: 4, name: "Twitter", url: "https://twitter.com", icon: "fab fa-twitter", type: "fa" },
+            { id: 5, name: "Reddit", url: "https://reddit.com", icon: "fab fa-reddit", type: "fa" },
+            { id: 6, name: "Spotify", url: "https://spotify.com", icon: "fab fa-spotify", type: "fa" },
+            { id: 7, name: "Netflix", url: "https://netflix.com", icon: "fas fa-film", type: "fa" },
+            { id: 8, name: "Amazon", url: "https://amazon.com", icon: "fab fa-amazon", type: "fa" }
+        ];
+        
+        function showStatusMessage(message, duration = 3000) {
+            statusMessage.textContent = message;
+            statusMessage.style.display = 'block';
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, duration);
+        }
+        
+        // 加载数据
+        function loadData() {
+            const savedQuotes = localStorage.getItem('customQuotes');
+            const savedEngines = localStorage.getItem('customEngines');
+            const savedLinks = localStorage.getItem('customLinks');
+            const showSearch = localStorage.getItem('showSearch');
+            const showLinks = localStorage.getItem('showLinks');
+            const showText = localStorage.getItem('showText');
+            
+            if (savedQuotes) {
+                const customQuotes = JSON.parse(savedQuotes);
+                quotes = [...quotes, ...customQuotes];
+            }
+            
+            if (savedEngines) {
+                searchEngines = searchEngines.concat(JSON.parse(savedEngines));
+            }
+            
+            if (savedLinks) {
+                const customLinks = JSON.parse(savedLinks);
+                quickLinks = [...quickLinks, ...customLinks];
+            }
+            
+            if (showSearch !== null) {
+                searchVisible = showSearch === 'true';
+                toggleSearchBtn.classList.toggle('active', searchVisible);
+                updateVisibility();
+            }
+            
+            if (showLinks !== null) {
+                linksVisible = showLinks === 'true';
+                toggleLinksBtn.classList.toggle('active', linksVisible);
+                updateVisibility();
+            }
+            
+            if (showText !== null) {
+                textVisible = showText === 'true';
+                toggleTextBtn.classList.toggle('active', textVisible);
+                randomTextElement.style.display = textVisible ? 'flex' : 'none';
+            }
+        }
+        
+        // 保存数据
+        function saveData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+        
+        // 更新
+        function updateDateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const day = days[now.getDay()];
+            const date = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+            
+            timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+            dateElement.textContent = `${date} ${day}`;
+        }
+        
+        // 更新
+        function updateRandomText() {
+            if (!textVisible) return;
+            
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const newText = quotes[randomIndex].text;
+            const animation = randomTextElement.dataset.animation || 'fadeIn';
+            
+            randomTextElement.classList.add('fade-out');
+            
+            setTimeout(() => {
+                randomTextElement.textContent = newText;
+                randomTextElement.className = 'random-text';
+                
+                // 神人效果
+                if (animation === 'typewriter') {
+                    randomTextElement.classList.add('typewriter');
+                    setTimeout(() => {
+                        randomTextElement.classList.remove('typewriter');
+                    }, 4000);
+                } else {
+                    setTimeout(() => {
+                        randomTextElement.classList.add(animation);
+                    }, 50);
+                }
+            }, 500);
+        }
+        
+        // 全屏
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`全屏请求错误: ${err.message}`);
+                });
+                fullscreenBtn.style.display = 'none';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+                fullscreenBtn.style.display = 'flex';
+            }
+        }
+        
+        // 设置
+        function toggleSettings() {
+            settingsPanel.classList.toggle('open');
+        }
+        
+        // 切换背景
+        function changeBackground(showNotification = false) {
+            const bgApi = document.getElementById('bg-api').value || 'https://t.alcy.cc/ycy';
+            
+            // 显示加载指示器
+            bgLoader.style.display = 'flex';
+            
+            // 添加时间戳👍
+            const timestamp = new Date().getTime();
+            const bgUrl = `${bgApi}${bgApi.includes('?') ? '&' : '?'}t=${timestamp}`;
+            
+            // 使用CSS
+            const bgImg = new Image();
+            bgImg.onload = function() {
+                document.body.style.backgroundImage = `url(${bgUrl})`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                bgLoader.style.display = 'none';
+                if (showNotification) {
+                    showStatusMessage('背景已更新');
+                }
+            };
+            bgImg.onerror = function() {
+                console.error('背景图片加载失败，使用默认背景');
+                document.body.style.background = 'linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c)';
+                bgLoader.style.display = 'none';
+                if (showNotification) {
+                    showStatusMessage('背景加载失败，使用默认背景', 5000);
+                }
+            };
+            bgImg.src = bgUrl;
+        }
+        
+        function updateVisibility() {
+            // 搜索栏
+            searchContainer.style.display = searchVisible ? 'block' : 'none';
+            
+            // 快捷链接
+            quickLinksContainer.style.display = linksVisible ? 'flex' : 'none';
+            
+            // 主要
+            if (searchVisible || linksVisible) {
+                contentContainer.classList.remove('hidden');
+                scrollHint.style.display = 'block';
+            } else {
+                contentContainer.classList.add('hidden');
+                scrollHint.style.display = 'none';
+            }
+            
+            // 保存设置
+            localStorage.setItem('showSearch', searchVisible);
+            localStorage.setItem('showLinks', linksVisible);
+            localStorage.setItem('showText', textVisible);
+        }
+        
+        // 渲染搜索引擎选择器
+        function renderSearchEngineSelector() {
+            const container = document.getElementById('search-engine-selector');
+            container.innerHTML = '';
+            
+            searchEngines.forEach(engine => {
+                const option = document.createElement('div');
+                option.className = 'animation-option';
+                if (engine.default) option.classList.add('active');
+                option.dataset.engine = engine.name;
+                option.textContent = engine.name;
+                
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.animation-option[data-engine]').forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                });
+                
+                container.appendChild(option);
+            });
+        }
+        
+        // 渲染自定义搜索引擎列表
+        function renderCustomEnginesList() {
+            const container = document.getElementById('custom-engines-list');
+            container.innerHTML = '';
+            
+            const customEngines = searchEngines.filter(engine => !engine.default);
+            
+            if (customEngines.length === 0) {
+                container.innerHTML = '<p class="custom-item">暂无自定义搜索引擎</p>';
+                return;
+            }
+            
+            customEngines.forEach((engine, index) => {
+                const item = document.createElement('div');
+                item.className = 'custom-item';
+                item.innerHTML = `
+                    <span>${engine.name}</span>
+                    <div class="actions">
+                        <button class="btn-icon delete-engine" data-index="${index}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+            
+            // 添加删除事件
+            document.querySelectorAll('.delete-engine').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.closest('.delete-engine').dataset.index);
+                    searchEngines.splice(index + 4, 1); // 保留前4个默认引擎
+                    saveData('customEngines', searchEngines.filter(engine => !engine.default));
+                    renderCustomEnginesList();
+                    showStatusMessage('搜索引擎已删除');
+                });
+            });
+        }
+        
+        // 渲染快捷链接
+        function renderQuickLinks() {
+            quickLinksContainer.innerHTML = '';
+            
+            quickLinks.forEach((link, index) => {
+                const item = document.createElement('div');
+                item.className = 'link-item';
+                item.dataset.url = link.url;
+                item.innerHTML = `
+                    <div class="icon-container">
+                        ${link.type === 'fa' ? 
+                            `<i class="${link.icon}"></i>` : 
+                            `<img src="${link.icon}" alt="${link.name}">`}
+                    </div>
+                    <span>${link.name}</span>
+                    <div class="delete-link" data-index="${index}">
+                        <i class="fas fa-trash"></i>
+                    </div>
+                    <div class="edit-link" data-index="${index}">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                `;
+                
+                item.addEventListener('click', (e) => {
+                    // 确保点击的不是删除或编辑按钮
+                    if (!e.target.closest('.delete-link') && !e.target.closest('.edit-link')) {
+                        window.open(link.url, '_blank');
+                    }
+                });
+                
+                quickLinksContainer.appendChild(item);
+            });
+            
+            // 添加删除事件
+            document.querySelectorAll('.delete-link').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = parseInt(e.target.closest('.delete-link').dataset.index);
+                    quickLinks.splice(index, 1);
+                    
+                    // 区分默认链接和自定义链接
+                    if (index >= 8) {
+                        saveData('customLinks', quickLinks.slice(8));
+                    }
+                    
+                    renderQuickLinks();
+                    renderCustomLinksList();
+                    showStatusMessage('链接已删除');
+                });
+            });
+            
+            // 添加编辑事件
+            document.querySelectorAll('.edit-link').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = parseInt(e.target.closest('.edit-link').dataset.index);
+                    openEditLinkModal(index);
+                });
+            });
+        }
+        
+        // 打开编辑链接模态框
+        function openEditLinkModal(index) {
+            const link = quickLinks[index];
+            currentEditItem = link;
+            currentEditType = 'link';
+            currentEditIndex = index;
+            
+            editFormContainer.innerHTML = `
+                <div class="form-group">
+                    <label for="edit-link-name">链接名称</label>
+                    <input type="text" class="form-control" id="edit-link-name" value="${link.name}">
+                </div>
+                <div class="form-group">
+                    <label for="edit-link-url">链接地址</label>
+                    <input type="text" class="form-control" id="edit-link-url" value="${link.url}">
+                </div>
+                <div class="form-group">
+                    <label for="edit-link-icon">图标 (Font Awesome类名或图片URL)</label>
+                    <input type="text" class="form-control" id="edit-link-icon" value="${link.icon}">
+                </div>
+            `;
+            
+            document.getElementById('edit-modal-title').textContent = '编辑链接';
+            editModal.style.display = 'flex';
+        }
+        
+        // 打开编辑文本模态框
+        function openEditQuoteModal(index) {
+            const quote = quotes[index];
+            currentEditItem = quote;
+            currentEditType = 'quote';
+            currentEditIndex = index;
+            
+            editFormContainer.innerHTML = `
+                <div class="form-group">
+                    <label for="edit-quote-text">文本内容</label>
+                    <textarea class="form-control" id="edit-quote-text" rows="4">${quote.text}</textarea>
+                </div>
+            `;
+            
+            document.getElementById('edit-modal-title').textContent = '编辑文本';
+            editModal.style.display = 'flex';
+        }
+        
+        // 渲染自定义链接列表
+        function renderCustomLinksList() {
+            const container = document.getElementById('custom-links-list');
+            container.innerHTML = '';
+            
+            const customLinks = quickLinks.slice(8);
+            
+            if (customLinks.length === 0) {
+                container.innerHTML = '<p class="custom-item">暂无自定义链接</p>';
+                return;
+            }
+            
+            customLinks.forEach((link, index) => {
+                const item = document.createElement('div');
+                item.className = 'custom-item';
+                item.innerHTML = `
+                    <span>${link.name}</span>
+                    <div class="actions">
+                        <button class="btn-icon edit-custom-link" data-index="${index + 8}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon delete-custom-link" data-index="${index + 8}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+            
+            // 添加编辑
+            document.querySelectorAll('.edit-custom-link').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.closest('.edit-custom-link').dataset.index);
+                    openEditLinkModal(index);
+                });
+            });
+            
+            // 添加删除
+            document.querySelectorAll('.delete-custom-link').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.closest('.delete-custom-link').dataset.index);
+                    quickLinks.splice(index, 1);
+                    saveData('customLinks', quickLinks.slice(8));
+                    renderCustomLinksList();
+                    renderQuickLinks();
+                    showStatusMessage('链接已删除');
+                });
+            });
+        }
+    
+        function renderCustomQuotesList() {
+            const container = document.getElementById('custom-quotes-list');
+            container.innerHTML = '';
+            
+            quotes.forEach((quote, index) => {
+                const item = document.createElement('div');
+                item.className = 'custom-item';
+                item.innerHTML = `
+                    <span>${quote.text.substring(0, 50)}${quote.text.length > 50 ? '...' : ''}</span>
+                    <div class="actions">
+                        <button class="btn-icon edit-custom-quote" data-index="${index}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon delete-custom-quote" data-index="${index}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+            
+            // 添加编辑事件
+            document.querySelectorAll('.edit-custom-quote').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.closest('.edit-custom-quote').dataset.index);
+                    openEditQuoteModal(index);
+                });
+            });
+            
+            // 添加删除事件
+            document.querySelectorAll('.delete-custom-quote').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.closest('.delete-custom-quote').dataset.index);
+                    quotes.splice(index, 1);
+                    saveData('customQuotes', quotes);
+                    renderCustomQuotesList();
+                    showStatusMessage('文本已删除');
+                });
+            });
+        }
+        
+        // 保存编辑内容
+        function saveEdit() {
+            if (currentEditType === 'link') {
+                const name = document.getElementById('edit-link-name').value.trim();
+                const url = document.getElementById('edit-link-url').value.trim();
+                const icon = document.getElementById('edit-link-icon').value.trim();
+                
+                if (name && url && icon) {
+                    // 判断是Font Awesome还是图片URL
+                    const type = icon.startsWith('http') ? 'img' : 'fa';
+                    
+                    quickLinks[currentEditIndex] = { 
+                        ...quickLinks[currentEditIndex], 
+                        name, 
+                        url, 
+                        icon, 
+                        type 
+                    };
+                    
+                    // 如果是自定义链接，保存到localStorage
+                    if (currentEditIndex >= 8) {
+                        saveData('customLinks', quickLinks.slice(8));
+                    }
+                    
+                    renderQuickLinks();
+                    renderCustomLinksList();
+                    showStatusMessage('链接已更新');
+                } else {
+                    showStatusMessage('请填写完整的链接信息', 5000);
+                }
+            } 
+            else if (currentEditType === 'quote') {
+                const text = document.getElementById('edit-quote-text').value.trim();
+                
+                if (text) {
+                    quotes[currentEditIndex].text = text;
+                    saveData('customQuotes', quotes);
+                    
+                    renderCustomQuotesList();
+                    showStatusMessage('文本已更新');
+                    
+                    // 如果当前显示的是被编辑的文本，更新显示
+                    if (randomTextElement.textContent === currentEditItem.text) {
+                        updateRandomText();
+                    }
+                } else {
+                    showStatusMessage('请输入文本内容', 5000);
+                }
+            }
+            
+            closeEditModalFunc();
+        }
+        
+        // 关闭编辑模态框
+        function closeEditModalFunc() {
+            editModal.style.display = 'none';
+            currentEditItem = null;
+            currentEditType = null;
+            currentEditIndex = null;
+        }
+        
+        // 初始化设置
+        function initSettings() {
+            // 加载数据
+            loadData();
+            
+            // 颜色选择 - 应用到所有文本
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    const color = option.dataset.color;
+                    
+                    // 应用到所有文本元素
+                    document.querySelectorAll('.time-display, .date-display, .random-text, .search-box, .link-item, .custom-item')
+                        .forEach(el => {
+                            el.style.color = color;
+                        });
+                });
+            });
+            
+            // 字体选择 - 应用到所有文本
+            document.querySelectorAll('.font-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.font-option').forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    const font = option.dataset.font;
+                    
+                    // 应用到所有文本元素
+                    document.querySelectorAll('body').forEach(el => {
+                        el.style.fontFamily = font;
+                    });
+                });
+            });
+            
+            // 时间大小调整
+            const timeSizeSlider = document.getElementById('time-size');
+            const timeSizeValue = document.getElementById('time-size-value');
+            
+            timeSizeSlider.addEventListener('input', () => {
+                const size = timeSizeSlider.value;
+                timeSizeValue.textContent = `${size}vw`;
+                timeElement.style.fontSize = `${size}vw`;
+            });
+            
+            // 动画效果选择
+            document.querySelectorAll('.animation-option').forEach(option => {
+                if (option.dataset.animation) {
+                    option.addEventListener('click', () => {
+                        document.querySelectorAll('.animation-option').forEach(opt => opt.classList.remove('active'));
+                        option.classList.add('active');
+                        randomTextElement.dataset.animation = option.dataset.animation;
+                    });
+                }
+            });
+            
+            // 文字切换间隔
+            const textChangeSlider = document.getElementById('text-change');
+            const textChangeValue = document.getElementById('text-change-value');
+            
+            textChangeSlider.addEventListener('input', () => {
+                const seconds = textChangeSlider.value;
+                textChangeValue.textContent = seconds;
+                clearInterval(textInterval);
+                textInterval = setInterval(updateRandomText, seconds * 1000);
+                showStatusMessage(`文本切换间隔已设为 ${seconds} 秒`);
+            });
+            
+            // 背景切换间隔
+            const bgChangeSlider = document.getElementById('bg-change');
+            const bgChangeValue = document.getElementById('bg-change-value');
+            
+            bgChangeSlider.addEventListener('input', () => {
+                const seconds = bgChangeSlider.value;
+                bgChangeValue.textContent = seconds;
+                if (bgSwitching) {
+                    clearInterval(bgInterval);
+                    bgInterval = setInterval(() => changeBackground(false), seconds * 1000);
+                    showStatusMessage(`背景切换间隔已设为 ${seconds} 秒`);
+                }
+            });
+            
+            // 添加搜索引擎
+            document.getElementById('add-engine-btn').addEventListener('click', () => {
+                const name = document.getElementById('new-engine-name').value.trim();
+                const url = document.getElementById('new-engine-url').value.trim();
+                
+                if (name && url && url.includes('{query}')) {
+                    searchEngines.push({ name, url, custom: true });
+                    saveData('customEngines', searchEngines.filter(engine => engine.custom));
+                    
+                    document.getElementById('new-engine-name').value = '';
+                    document.getElementById('new-engine-url').value = '';
+                    
+                    renderSearchEngineSelector();
+                    renderCustomEnginesList();
+                    showStatusMessage('搜索引擎已添加');
+                } else {
+                    showStatusMessage('请填写完整的搜索引擎信息，URL必须包含{query}', 5000);
+                }
+            });
+            
+            // 添加快捷链接
+            document.getElementById('add-link-btn').addEventListener('click', () => {
+                const name = document.getElementById('new-link-name').value.trim();
+                const url = document.getElementById('new-link-url').value.trim();
+                const icon = document.getElementById('new-link-icon').value.trim();
+                
+                if (name && url && icon) {
+                    // 判断是Font Awesome还是图片URL
+                    const type = icon.startsWith('http') ? 'img' : 'fa';
+                    
+                    quickLinks.push({ 
+                        id: Date.now(), 
+                        name, 
+                        url, 
+                        icon, 
+                        type, 
+                        custom: true 
+                    });
+                    saveData('customLinks', quickLinks.filter(link => link.custom));
+                    
+                    document.getElementById('new-link-name').value = '';
+                    document.getElementById('new-link-url').value = '';
+                    document.getElementById('new-link-icon').value = '';
+                    
+                    renderQuickLinks();
+                    renderCustomLinksList();
+                    showStatusMessage('快捷链接已添加');
+                } else {
+                    showStatusMessage('请填写完整的链接信息', 5000);
+                }
+            });
+            
+            // 添加随机文本
+            document.getElementById('add-quote-btn').addEventListener('click', () => {
+                const text = document.getElementById('new-quote-text').value.trim();
+                
+                if (text) {
+                    quotes.push({ id: Date.now(), text });
+                    saveData('customQuotes', quotes);
+                    
+                    document.getElementById('new-quote-text').value = '';
+                    renderCustomQuotesList();
+                    showStatusMessage('文本已添加');
+                } else {
+                    showStatusMessage('请输入文本内容', 5000);
+                }
+            });
+            
+            // 更新背景图片
+            document.getElementById('update-bg-btn').addEventListener('click', () => changeBackground(true));
+            
+            // 停止/开始背景切换
+            document.getElementById('stop-bg-btn').addEventListener('click', () => {
+                clearInterval(bgInterval);
+                bgSwitching = false;
+                document.getElementById('bg-toggle-btn').classList.remove('btn-success');
+                document.getElementById('bg-toggle-btn').classList.add('btn-danger');
+                document.getElementById('bg-toggle-btn').innerHTML = '<i class="fas fa-stop"></i> 切换已停止';
+                showStatusMessage('背景切换已停止');
+            });
+            
+            document.getElementById('bg-toggle-btn').addEventListener('click', function() {
+                if (bgSwitching) {
+                    clearInterval(bgInterval);
+                    bgSwitching = false;
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-danger');
+                    this.innerHTML = '<i class="fas fa-stop"></i> 切换已停止';
+                    showStatusMessage('背景切换已停止');
+                } else {
+                    const seconds = document.getElementById('bg-change').value;
+                    bgInterval = setInterval(() => changeBackground(false), seconds * 1000);
+                    bgSwitching = true;
+                    this.classList.remove('btn-danger');
+                    this.classList.add('btn-success');
+                    this.innerHTML = '<i class="fas fa-play"></i> 切换背景';
+                    showStatusMessage('背景切换已启动');
+                }
+            });
+            
+            // 切换文本显示
+            toggleTextBtn.addEventListener('click', function() {
+                textVisible = !textVisible;
+                this.classList.toggle('active', textVisible);
+                randomTextElement.style.display = textVisible ? 'flex' : 'none';
+                saveData('showText', textVisible);
+                if (textVisible) {
+                    showStatusMessage('文本已显示');
+                    updateRandomText();
+                } else {
+                    showStatusMessage('文本已隐藏');
+                }
+            });
+            
+            // 切换搜索栏显示
+            toggleSearchBtn.addEventListener('click', function() {
+                searchVisible = !searchVisible;
+                this.classList.toggle('active', searchVisible);
+                updateVisibility();
+                showStatusMessage(searchVisible ? '搜索栏已显示' : '搜索栏已隐藏');
+            });
+            
+            // 切换快捷链接显示
+            toggleLinksBtn.addEventListener('click', function() {
+                linksVisible = !linksVisible;
+                this.classList.toggle('active', linksVisible);
+                updateVisibility();
+                showStatusMessage(linksVisible ? '快捷链接已显示' : '快捷链接已隐藏');
+            });
+            
+            // 初始更新显示设置
+            updateVisibility();
+            
+            // 渲染初始列表
+            renderSearchEngineSelector();
+            renderCustomEnginesList();
+            renderQuickLinks();
+            renderCustomLinksList();
+            renderCustomQuotesList();
+        }
+        
+        // 事件监听
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        settingsBtn.addEventListener('click', toggleSettings);
+        closeSettingsBtn.addEventListener('click', toggleSettings);
+        
+        // 搜索功能
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const engineElement = document.querySelector('.animation-option[data-engine].active');
+                if (!engineElement) return;
+                
+                const engineName = engineElement.dataset.engine;
+                const engine = searchEngines.find(e => e.name === engineName);
+                
+                if (engine) {
+                    const query = encodeURIComponent(searchInput.value);
+                    const url = engine.url.replace('{query}', query);
+                    window.open(url, '_blank');
+                    searchInput.value = '';
+                }
+            }
+        });
+        
+        // 退出全屏时显示按钮
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                fullscreenBtn.style.display = 'flex';
+            }
+        });
+        
+        // 编辑模态框事件
+        closeEditModal.addEventListener('click', closeEditModalFunc);
+        cancelEditBtn.addEventListener('click', closeEditModalFunc);
+        saveEditBtn.addEventListener('click', saveEdit);
+        
+        // 点击模态框外部关闭
+        window.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                closeEditModalFunc();
+            }
+        });
+        
+        // 滚动事件
+        window.addEventListener('scroll', () => {
+            scrollPosition = window.scrollY;
+            // 当用户滚动时隐藏滚动提示
+            if (scrollPosition > 50) {
+                scrollHint.style.opacity = '0';
+            } else {
+                scrollHint.style.opacity = '0.7';
+            }
+        });
+        
+        // 初始化
+        updateDateTime();
+        updateRandomText();
+        changeBackground(false);
+        initSettings();
+        
+        // 设置定时器
+        setInterval(updateDateTime, 1000);
+        textInterval = setInterval(updateRandomText, 10000);
+        bgInterval = setInterval(() => changeBackground(false), 30000);
+    </script>
+</body>
+</html>
             background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9));
             z-index: -1;
         }
