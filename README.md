@@ -3,7 +3,7 @@
 ![DashSaver Cover](assets/cover.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/DashSaver?style=social)](https://github.com/yourusername/DashSaver)
+[![GitHub stars](https://img.shields.io/github/stars/fastnow/DashSaver?style=social)](https://github.com/fastnow/DashSaver)
 
 DashSaver 是一个现代化的网页屏保仪表盘，集成了时间日期显示、励志名言、搜索引擎和快捷链接等功能。它可以在空闲时作为屏保显示，也可以作为日常使用的浏览器主页。
 
