@@ -1,5 +1,7 @@
 # DashSaver - 高级屏保仪表盘
 
+![DashSaver Cover](assets/cover.png)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/yourusername/DashSaver?style=social)](https://github.com/yourusername/DashSaver)
 
