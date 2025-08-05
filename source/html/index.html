@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DashSaver</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div id="background-overlay"></div>
+    
+    <div class="bg-loader" id="bg-loader">
+        <i class="fas fa-sync fa-spin"></i> 正在加载背景...
+    </div>
+    
+    <div class="status-message" id="status-message"></div>
+    
+    <div class="container">
+        <div class="controls">
+            <button class="btn" id="fullscreen-btn" title="全屏">
+                <i class="fas fa-expand"></i>
+            </button>
+            <button class="btn" id="settings-btn" title="设置">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+        <div class="center-container">
+            <div class="time-display" id="time">00:00:00</div>
+            <div class="date-display" id="date">2025年1月1日 星期一</div>
+            <div class="random-text-container">
+                <div class="random-text" id="random-text">生活就像骑自行车，为了保持平衡，你必须不断前进</div>
+            </div>
+        </div>
+        <div class="content-container" id="content-container">
+            <div class="search-container" id="search-container">
+                <input type="text" class="search-box" placeholder="搜索互联网..." id="search-input">
+            </div>
+            <div class="quick-links" id="quick-links">
+            </div>
+        </div>
+    </div>
+    <div class="settings-panel" id="settings-panel">
+        <div class="settings-header">
+            <h2>仪表盘设置</h2>
+            <button class="close-btn" id="close-settings">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-clock"></i> 时间显示设置</h3>
+            
+            <div class="color-picker">
+                <div class="color-option active" style="background: #ffffff;" data-color="#ffffff"></div>
+                <div class="color-option" style="background: #ff6b6b;" data-color="#ff6b6b"></div>
+                <div class="color-option" style="background: #4ecdc4;" data-color="#4ecdc4"></div>
+                <div class="color-option" style="background: #ffe66d;" data-color="#ffe66d"></div>
+                <div class="color-option" style="background: #ff9f68;" data-color="#ff9f68"></div>
+                <div class="color-option" style="background: #9b5de5;" data-color="#9b5de5"></div>
+                <div class="color-option" style="background: #00bbf9;" data-color="#00bbf9"></div>
+                <div class="color-option" style="background: #00f5d4;" data-color="#00f5d4"></div>
+            </div>
+            
+            <div class="slider-container">
+                <label for="time-size">时间字体大小: <span id="time-size-value">8vw</span></label>
+                <input type="range" id="time-size" min="5" max="15" value="8" step="0.5">
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-font"></i> 全局字体设置</h3>
+            
+            <div class="font-selector">
+                <div class="font-option active" data-font="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">默认</div>
+                <div class="font-option" data-font="Arial, sans-serif">Arial</div>
+                <div class="font-option" data-font="Georgia, serif">Georgia</div>
+                <div class="font-option" data-font="'Courier New', monospace">Courier</div>
+                <div class="font-option" data-font="Impact, sans-serif">Impact</div>
+                <div class="font-option" data-font="'Times New Roman', serif">Times</div>
+                <div class="font-option" data-font="Verdana, sans-serif">Verdana</div>
+                <div class="font-option" data-font="'Comic Sans MS', cursive">Comic</div>
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-quote-right"></i> 文字动画效果</h3>
+            
+            <div class="animation-selector">
+                <div class="animation-option active" data-animation="fadeIn">淡入效果</div>
+                <div class="animation-option" data-animation="slideUp">上浮效果</div>
+                <div class="animation-option" data-animation="typewriter">打字机效果</div>
+                <div class="animation-option" data-animation="fade-out">淡出效果</div>
+            </div>
+            
+            <div class="slider-container">
+                <label for="text-change">文字切换间隔: <span id="text-change-value">10</span> 秒</label>
+                <input type="range" id="text-change" min="5" max="30" value="10">
+            </div>
+            
+            <div class="visibility-control">
+                <span>显示随机文本</span>
+                <div class="toggle-btn active" id="toggle-text-btn">
+                    <span class="toggle-switch"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-search"></i> 搜索引擎设置</h3>
+            
+            <div class="animation-selector" id="search-engine-selector">
+            </div>
+            <div class="visibility-control">
+                <span>显示搜索栏</span>
+                <div class="toggle-btn active" id="toggle-search-btn">
+                    <span class="toggle-switch"></span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="new-engine-name">添加自定义搜索引擎</label>
+                <input type="text" class="form-control" id="new-engine-name" placeholder="搜索引擎名称">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" class="form-control" id="new-engine-url" placeholder="搜索URL (使用{query}作为搜索词)">
+            </div>
+            
+            <button class="btn-primary" id="add-engine-btn">
+                <i class="fas fa-plus"></i> 添加搜索引擎
+            </button>
+            
+            <div class="custom-items-list" id="custom-engines-list">
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-link"></i> 快捷链接设置</h3>
+            
+            <div class="visibility-control">
+                <span>显示快捷链接</span>
+                <div class="toggle-btn active" id="toggle-links-btn">
+                    <span class="toggle-switch"></span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="new-link-name">链接名称</label>
+                <input type="text" class="form-control" id="new-link-name" placeholder="例如: GitHub">
+            </div>
+            
+            <div class="form-group">
+                <label for="new-link-url">链接地址</label>
+                <input type="text" class="form-control" id="new-link-url" placeholder="https://example.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="new-link-icon">图标 (Font Awesome类名或图片URL)</label>
+                <input type="text" class="form-control" id="new-link-icon" placeholder="例如: fab fa-github 或 https://example.com/icon.png">
+            </div>
+            
+            <button class="btn-primary" id="add-link-btn">
+                <i class="fas fa-plus"></i> 添加快捷链接
+            </button>
+            
+            <div class="custom-items-list" id="custom-links-list">
+                <!-- 自定义链接列表将通过JavaScript动态生成 -->
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-quote-right"></i> 随机文本设置</h3>
+            
+            <div class="form-group">
+                <label for="new-quote-text">添加自定义文本</label>
+                <textarea class="form-control" id="new-quote-text" placeholder="输入您喜欢的名言或句子..." rows="3"></textarea>
+            </div>
+            
+            <button class="btn-primary" id="add-quote-btn">
+                <i class="fas fa-plus"></i> 添加文本
+            </button>
+            
+            <div class="custom-items-list" id="custom-quotes-list">
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <h3><i class="fas fa-image"></i> 背景设置</h3>
+            
+            <div class="form-group">
+                <label for="bg-api">背景图片API</label>
+                <input type="text" class="form-control" id="bg-api" value="https://source.unsplash.com/random/1920x1080/?nature" placeholder="输入背景图片API">
+            </div>
+            
+            <div class="slider-container">
+                <label for="bg-change">背景切换间隔: <span id="bg-change-value">30</span> 秒</label>
+                <input type="range" id="bg-change" min="10" max="120" value="30">
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn-primary btn-sm" id="update-bg-btn">
+                    <i class="fas fa-sync"></i> 更新背景
+                </button>
+                <button class="btn-primary btn-sm btn-success" id="bg-toggle-btn">
+                    <i class="fas fa-play"></i> 切换背景
+                </button>
+                <button class="btn-primary btn-sm btn-danger" id="stop-bg-btn">
+                    <i class="fas fa-stop"></i> 停止切换
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="edit-modal-title">编辑项目</h3>
+                <button class="modal-close" id="close-edit-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="edit-form-container">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="save-edit-btn">保存更改</button>
+                <button class="btn-primary btn-danger" id="cancel-edit-btn">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/script.js" defer></script>
+</body>
+</html>
