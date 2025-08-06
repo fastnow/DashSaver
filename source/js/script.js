@@ -20,6 +20,7 @@ const saveEditBtn = document.getElementById('save-edit-btn');
 const editFormContainer = document.getElementById('edit-form-container');
 const contentContainer = document.getElementById('content-container');
 const searchContainer = document.getElementById('search-container');
+const centerContainer = document.getElementById('center-container');
 
 // 状态变量
 let bgInterval;
@@ -102,30 +103,30 @@ let quickLinks = [{
     },
     {
         id: 2,
-        name: "Gmail",
-        url: "https://gmail.com",
-        icon: "fas fa-envelope",
+        name: "Apple",
+        url: "https://applel.com",
+        icon: "fab fa-apple",
         type: "fa"
     },
     {
         id: 3,
-        name: "YouTube",
-        url: "https://youtube.com",
-        icon: "fab fa-youtube",
+        name: "Cloudflare",
+        url: "https://cloudflare.com",
+        icon: "fab fa-cloudflare",
         type: "fa"
     },
     {
         id: 4,
-        name: "Twitter",
-        url: "https://twitter.com",
-        icon: "fab fa-twitter",
+        name: "Codepen",
+        url: "https://codepen.io",
+        icon: "fab fa-codepen",
         type: "fa"
     },
     {
         id: 5,
         name: "Reddit",
-        url: "https://reddit.com",
-        icon: "fab fa-reddit",
+        url: "https://microsoft.com",
+        icon: "fa-brands fa-microsoft",
         type: "fa"
     },
     {
@@ -138,8 +139,8 @@ let quickLinks = [{
     {
         id: 7,
         name: "Netflix",
-        url: "https://netflix.com",
-        icon: "fas fa-film",
+        url: "https://store.steampowered.com",
+        icon: "fab fa-steam-square",
         type: "fa"
     },
     {
@@ -169,6 +170,7 @@ function loadData() {
     const showLinks = localStorage.getItem('showLinks');
     const showText = localStorage.getItem('showText');
     const savedFont = localStorage.getItem('selectedFont');
+    const savedColor = localStorage.getItem('selectedColor');
 
     if (savedQuotes) {
         const customQuotes = JSON.parse(savedQuotes);
@@ -200,14 +202,29 @@ function loadData() {
         textVisible = showText === 'true';
         toggleTextBtn.classList.toggle('active', textVisible);
         randomTextElement.style.display = textVisible ? 'flex' : 'none';
+        centerContainer.classList.toggle('text-hidden', !textVisible);
     }
 
     // 应用保存的字体
     if (savedFont) {
-        document.body.style.fontFamily = savedFont;
+        document.documentElement.style.setProperty('--global-font', savedFont);
         document.querySelectorAll('.font-option').forEach(option => {
             if (option.dataset.font === savedFont) {
                 option.classList.add('active');
+            } else {
+                option.classList.remove('active');
+            }
+        });
+    }
+
+    // 应用保存的颜色
+    if (savedColor) {
+        document.querySelectorAll('.color-option').forEach(option => {
+            if (option.dataset.color === savedColor) {
+                option.classList.add('active');
+                document.documentElement.style.setProperty('--time-color', savedColor);
+                document.documentElement.style.setProperty('--date-color', savedColor.replace(')', ', 0.8)').replace('rgb', 'rgba'));
+                document.documentElement.style.setProperty('--text-color', savedColor.replace(')', ', 0.85)').replace('rgb', 'rgba'));
             } else {
                 option.classList.remove('active');
             }
@@ -288,7 +305,7 @@ function toggleSettings() {
 
 // 切换背景 - 使用CSS加载图片
 function changeBackground(showNotification = false) {
-    const bgApi = document.getElementById('bg-api').value || 'https://t.alcy.cc/ycy';
+    const bgApi = document.getElementById('bg-api').value || 'https://source.unsplash.com/random/1920x1080/?nature';
 
     // 显示加载指示器
     bgLoader.style.display = 'flex';
@@ -662,22 +679,24 @@ function initSettings() {
     // 加载数据
     loadData();
 
-    // 颜色选择 - 应用到所有文本
+    // 颜色选择
     document.querySelectorAll('.color-option').forEach(option => {
         option.addEventListener('click', () => {
             document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
             option.classList.add('active');
             const color = option.dataset.color;
 
-            // 应用到所有文本元素
-            document.querySelectorAll('.time-display, .date-display, .random-text, .search-box, .link-item, .custom-item')
-                .forEach(el => {
-                    el.style.color = color;
-                });
+            // 应用颜色
+            document.documentElement.style.setProperty('--time-color', color);
+            document.documentElement.style.setProperty('--date-color', color.replace(')', ', 0.8)').replace('rgb', 'rgba'));
+            document.documentElement.style.setProperty('--text-color', color.replace(')', ', 0.85)').replace('rgb', 'rgba'));
+
+            // 保存颜色
+            localStorage.setItem('selectedColor', color);
         });
     });
 
-    // 字体选择 - 应用到整个页面
+    // 字体选择 - 重写部分
     document.querySelectorAll('.font-option').forEach(option => {
         option.addEventListener('click', () => {
             document.querySelectorAll('.font-option').forEach(opt => opt.classList.remove('active'));
@@ -685,8 +704,9 @@ function initSettings() {
             const font = option.dataset.font;
 
             // 应用到整个页面
-            document.body.style.fontFamily = font;
+            document.documentElement.style.setProperty('--global-font', font);
             localStorage.setItem('selectedFont', font);
+
             showStatusMessage(`字体已更改为 ${option.textContent}`);
         });
     });
@@ -850,6 +870,7 @@ function initSettings() {
         textVisible = !textVisible;
         this.classList.toggle('active', textVisible);
         randomTextElement.style.display = textVisible ? 'flex' : 'none';
+        centerContainer.classList.toggle('text-hidden', !textVisible);
         saveData('showText', textVisible);
         if (textVisible) {
             showStatusMessage('文本已显示');
