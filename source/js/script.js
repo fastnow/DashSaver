@@ -1,4 +1,10 @@
-// 获取DOM元素
+/*
+ * A web application loader
+ * Copyright 2025 FastNow Studio
+ * License: MIT
+ * GitHub: https://github.com/fastnow/DashSaver
+*/
+
 const timeElement = document.getElementById('time');
 const dateElement = document.getElementById('date');
 const randomTextElement = document.getElementById('random-text');
@@ -21,19 +27,23 @@ const editFormContainer = document.getElementById('edit-form-container');
 const contentContainer = document.getElementById('content-container');
 const searchContainer = document.getElementById('search-container');
 const centerContainer = document.getElementById('center-container');
+const customEnginesList = document.getElementById('custom-engines-list');
 
-// 状态变量
-let bgInterval;
+let bgInterval = null;
 let bgSwitching = true;
-let textInterval;
+let textInterval = null;
 let textVisible = true;
 let searchVisible = true;
 let linksVisible = true;
 let currentEditItem = null;
 let currentEditType = null;
 let currentEditIndex = null;
+let isBgChanging = false;
+let lastBgChangeTime = 0;
 
-// 初始化数据
+let animationIn = 'fade-in';
+let animationOut = 'fade-out';
+
 let quotes = [{
         id: 1,
         text: "生活就像骑自行车，为了保持平衡，你必须不断前进"
@@ -78,19 +88,23 @@ let quotes = [{
 
 let searchEngines = [{
         name: "Google",
-        url: "https://www.google.com/search?q={query}"
+        url: "https://www.google.com/search?q={query}",
+        default: true
     },
     {
         name: "Bing",
-        url: "https://www.bing.com/search?q={query}"
+        url: "https://www.bing.com/search?q={query}",
+        default: true
     },
     {
         name: "DuckDuckGo",
-        url: "https://duckduckgo.com/?q={query}"
+        url: "https://duckduckgo.com/?q={query}",
+        default: true
     },
     {
         name: "百度",
-        url: "https://www.baidu.com/s?wd={query}"
+        url: "https://www.baidu.com/s?wd={query}",
+        default: true
     }
 ];
 
@@ -103,30 +117,30 @@ let quickLinks = [{
     },
     {
         id: 2,
-        name: "Apple",
-        url: "https://applel.com",
-        icon: "fab fa-apple",
+        name: "Gmail",
+        url: "https://gmail.com",
+        icon: "fas fa-envelope",
         type: "fa"
     },
     {
         id: 3,
-        name: "Cloudflare",
-        url: "https://cloudflare.com",
-        icon: "fab fa-cloudflare",
+        name: "YouTube",
+        url: "https://youtube.com",
+        icon: "fab fa-youtube",
         type: "fa"
     },
     {
         id: 4,
-        name: "Codepen",
-        url: "https://codepen.io",
-        icon: "fab fa-codepen",
+        name: "Twitter",
+        url: "https://twitter.com",
+        icon: "fab fa-twitter",
         type: "fa"
     },
     {
         id: 5,
         name: "Reddit",
-        url: "https://microsoft.com",
-        icon: "fa-brands fa-microsoft",
+        url: "https://reddit.com",
+        icon: "fab fa-reddit",
         type: "fa"
     },
     {
@@ -139,8 +153,8 @@ let quickLinks = [{
     {
         id: 7,
         name: "Netflix",
-        url: "https://store.steampowered.com",
-        icon: "fab fa-steam-square",
+        url: "https://netflix.com",
+        icon: "fas fa-film",
         type: "fa"
     },
     {
@@ -171,6 +185,8 @@ function loadData() {
     const showText = localStorage.getItem('showText');
     const savedFont = localStorage.getItem('selectedFont');
     const savedColor = localStorage.getItem('selectedColor');
+    const savedAnimationIn = localStorage.getItem('animationIn');
+    const savedAnimationOut = localStorage.getItem('animationOut');
 
     if (savedQuotes) {
         const customQuotes = JSON.parse(savedQuotes);
@@ -178,7 +194,8 @@ function loadData() {
     }
 
     if (savedEngines) {
-        searchEngines = searchEngines.concat(JSON.parse(savedEngines));
+        const customEngines = JSON.parse(savedEngines);
+        searchEngines = [...searchEngines, ...customEngines];
     }
 
     if (savedLinks) {
@@ -230,6 +247,29 @@ function loadData() {
             }
         });
     }
+
+    // 应用保存的动画
+    if (savedAnimationIn) {
+        animationIn = savedAnimationIn;
+        document.querySelectorAll('[data-animation-in]').forEach(option => {
+            if (option.dataset.animationIn === savedAnimationIn) {
+                option.classList.add('active');
+            } else {
+                option.classList.remove('active');
+            }
+        });
+    }
+
+    if (savedAnimationOut) {
+        animationOut = savedAnimationOut;
+        document.querySelectorAll('[data-animation-out]').forEach(option => {
+            if (option.dataset.animationOut === savedAnimationOut) {
+                option.classList.add('active');
+            } else {
+                option.classList.remove('active');
+            }
+        });
+    }
 }
 
 // 保存数据到localStorage
@@ -256,31 +296,38 @@ function updateDateTime() {
 function updateRandomText() {
     if (!textVisible) return;
 
+    // 防止多次调用
+    if (randomTextElement.classList.contains('updating')) return;
+
+    randomTextElement.classList.add('updating');
+
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const newText = quotes[randomIndex].text;
-    const animation = randomTextElement.dataset.animation || 'fadeIn';
 
     // 添加离开动画
-    randomTextElement.classList.add('fade-out');
+    randomTextElement.classList.add(animationOut);
 
     setTimeout(() => {
         randomTextElement.textContent = newText;
-        randomTextElement.className = 'random-text';
+        randomTextElement.className = 'random-text updating';
 
         // 特殊处理打字机效果
-        if (animation === 'typewriter') {
+        if (animationIn === 'typewriter') {
             randomTextElement.classList.add('typewriter');
             // 打字机效果结束后恢复正常
             setTimeout(() => {
-                randomTextElement.classList.remove('typewriter');
+                randomTextElement.classList.remove('typewriter', 'updating');
             }, 4000);
         } else {
             // 添加其他进入动画
+            randomTextElement.classList.add(animationIn);
+
+            // 动画结束后移除标记
             setTimeout(() => {
-                randomTextElement.classList.add(animation);
-            }, 50);
+                randomTextElement.classList.remove('updating');
+            }, 1000);
         }
-    }, 500);
+    }, 1000);
 }
 
 // 全屏功能
@@ -305,7 +352,14 @@ function toggleSettings() {
 
 // 切换背景 - 使用CSS加载图片
 function changeBackground(showNotification = false) {
-    const bgApi = document.getElementById('bg-api').value || 'https://source.unsplash.com/random/1920x1080/?nature';
+    // 防止频繁切换
+    const now = Date.now();
+    if (isBgChanging || (now - lastBgChangeTime < 5000)) return;
+
+    isBgChanging = true;
+    lastBgChangeTime = now;
+
+    const bgApi = document.getElementById('bg-api').value || 'https://t.alcy.cc/ycy';
 
     // 显示加载指示器
     bgLoader.style.display = 'flex';
@@ -321,6 +375,7 @@ function changeBackground(showNotification = false) {
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundPosition = 'center';
         bgLoader.style.display = 'none';
+        isBgChanging = false;
         if (showNotification) {
             showStatusMessage('背景已更新');
         }
@@ -329,6 +384,7 @@ function changeBackground(showNotification = false) {
         console.error('背景图片加载失败，使用默认背景');
         document.body.style.background = 'linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c)';
         bgLoader.style.display = 'none';
+        isBgChanging = false;
         if (showNotification) {
             showStatusMessage('背景加载失败，使用默认背景', 5000);
         }
@@ -391,12 +447,15 @@ function renderCustomEnginesList() {
     }
 
     customEngines.forEach((engine, index) => {
+        // 在整个搜索引擎数组中找到当前引擎的索引
+        const engineIndex = searchEngines.findIndex(e => e.name === engine.name && e.url === engine.url);
+
         const item = document.createElement('div');
         item.className = 'custom-item';
         item.innerHTML = `
                     <span>${engine.name}</span>
                     <div class="actions">
-                        <button class="btn-icon delete-engine" data-index="${index}">
+                        <button class="btn-icon delete-engine" data-index="${engineIndex}">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -404,15 +463,20 @@ function renderCustomEnginesList() {
         container.appendChild(item);
     });
 
-    // 添加删除事件
-    document.querySelectorAll('.delete-engine').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const index = parseInt(e.target.closest('.delete-engine').dataset.index);
-            searchEngines.splice(index + 4, 1); // 保留前4个默认引擎
-            saveData('customEngines', searchEngines.filter(engine => !engine.default));
-            renderCustomEnginesList();
-            showStatusMessage('搜索引擎已删除');
-        });
+    // 添加删除事件 - 使用事件委托
+    customEnginesList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-engine') || e.target.closest('.delete-engine')) {
+            const btn = e.target.closest('.delete-engine');
+            const index = parseInt(btn.dataset.index);
+
+            if (!isNaN(index) && index >= 0 && index < searchEngines.length) {
+                searchEngines.splice(index, 1);
+                saveData('customEngines', searchEngines.filter(engine => !engine.default));
+                renderSearchEngineSelector();
+                renderCustomEnginesList();
+                showStatusMessage('搜索引擎已删除');
+            }
+        }
     });
 }
 
@@ -450,31 +514,35 @@ function renderQuickLinks() {
         quickLinksContainer.appendChild(item);
     });
 
-    // 添加删除事件
-    document.querySelectorAll('.delete-link').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const index = parseInt(e.target.closest('.delete-link').dataset.index);
-            quickLinks.splice(index, 1);
+    // 添加删除事件 - 使用事件委托
+    quickLinksContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-link') || e.target.closest('.delete-link')) {
+            const btn = e.target.closest('.delete-link');
+            const index = parseInt(btn.dataset.index);
 
-            // 区分默认链接和自定义链接
-            if (index >= 8) {
-                saveData('customLinks', quickLinks.slice(8));
+            if (!isNaN(index) && index >= 0 && index < quickLinks.length) {
+                quickLinks.splice(index, 1);
+
+                // 区分默认链接和自定义链接
+                if (index >= 8) {
+                    saveData('customLinks', quickLinks.slice(8));
+                }
+
+                renderQuickLinks();
+                renderCustomLinksList();
+                showStatusMessage('链接已删除');
             }
+        }
 
-            renderQuickLinks();
-            renderCustomLinksList();
-            showStatusMessage('链接已删除');
-        });
-    });
+        // 添加编辑事件
+        if (e.target.classList.contains('edit-link') || e.target.closest('.edit-link')) {
+            const btn = e.target.closest('.edit-link');
+            const index = parseInt(btn.dataset.index);
 
-    // 添加编辑事件
-    document.querySelectorAll('.edit-link').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const index = parseInt(e.target.closest('.edit-link').dataset.index);
-            openEditLinkModal(index);
-        });
+            if (!isNaN(index) && index >= 0 && index < quickLinks.length) {
+                openEditLinkModal(index);
+            }
+        }
     });
 }
 
@@ -535,15 +603,16 @@ function renderCustomLinksList() {
     }
 
     customLinks.forEach((link, index) => {
+        const globalIndex = index + 8;
         const item = document.createElement('div');
         item.className = 'custom-item';
         item.innerHTML = `
                     <span>${link.name}</span>
                     <div class="actions">
-                        <button class="btn-icon edit-custom-link" data-index="${index + 8}">
+                        <button class="btn-icon edit-custom-link" data-index="${globalIndex}">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn-icon delete-custom-link" data-index="${index + 8}">
+                        <button class="btn-icon delete-custom-link" data-index="${globalIndex}">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -551,24 +620,29 @@ function renderCustomLinksList() {
         container.appendChild(item);
     });
 
-    // 添加编辑事件
-    document.querySelectorAll('.edit-custom-link').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const index = parseInt(e.target.closest('.edit-custom-link').dataset.index);
-            openEditLinkModal(index);
-        });
-    });
+    // 添加编辑和删除事件 - 使用事件委托
+    container.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-custom-link') || e.target.closest('.delete-custom-link')) {
+            const btn = e.target.closest('.delete-custom-link');
+            const index = parseInt(btn.dataset.index);
 
-    // 添加删除事件
-    document.querySelectorAll('.delete-custom-link').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const index = parseInt(e.target.closest('.delete-custom-link').dataset.index);
-            quickLinks.splice(index, 1);
-            saveData('customLinks', quickLinks.slice(8));
-            renderCustomLinksList();
-            renderQuickLinks();
-            showStatusMessage('链接已删除');
-        });
+            if (!isNaN(index) && index >= 8 && index < quickLinks.length) {
+                quickLinks.splice(index, 1);
+                saveData('customLinks', quickLinks.slice(8));
+                renderCustomLinksList();
+                renderQuickLinks();
+                showStatusMessage('链接已删除');
+            }
+        }
+
+        if (e.target.classList.contains('edit-custom-link') || e.target.closest('.edit-custom-link')) {
+            const btn = e.target.closest('.edit-custom-link');
+            const index = parseInt(btn.dataset.index);
+
+            if (!isNaN(index) && index >= 8 && index < quickLinks.length) {
+                openEditLinkModal(index);
+            }
+        }
     });
 }
 
@@ -594,23 +668,28 @@ function renderCustomQuotesList() {
         container.appendChild(item);
     });
 
-    // 添加编辑事件
-    document.querySelectorAll('.edit-custom-quote').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const index = parseInt(e.target.closest('.edit-custom-quote').dataset.index);
-            openEditQuoteModal(index);
-        });
-    });
+    // 添加编辑和删除事件 - 使用事件委托
+    container.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-custom-quote') || e.target.closest('.delete-custom-quote')) {
+            const btn = e.target.closest('.delete-custom-quote');
+            const index = parseInt(btn.dataset.index);
 
-    // 添加删除事件
-    document.querySelectorAll('.delete-custom-quote').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const index = parseInt(e.target.closest('.delete-custom-quote').dataset.index);
-            quotes.splice(index, 1);
-            saveData('customQuotes', quotes);
-            renderCustomQuotesList();
-            showStatusMessage('文本已删除');
-        });
+            if (!isNaN(index) && index >= 0 && index < quotes.length) {
+                quotes.splice(index, 1);
+                saveData('customQuotes', quotes);
+                renderCustomQuotesList();
+                showStatusMessage('文本已删除');
+            }
+        }
+
+        if (e.target.classList.contains('edit-custom-quote') || e.target.closest('.edit-custom-quote')) {
+            const btn = e.target.closest('.edit-custom-quote');
+            const index = parseInt(btn.dataset.index);
+
+            if (!isNaN(index) && index >= 0 && index < quotes.length) {
+                openEditQuoteModal(index);
+            }
+        }
     });
 }
 
@@ -696,7 +775,7 @@ function initSettings() {
         });
     });
 
-    // 字体选择 - 重写部分
+    // 字体选择
     document.querySelectorAll('.font-option').forEach(option => {
         option.addEventListener('click', () => {
             document.querySelectorAll('.font-option').forEach(opt => opt.classList.remove('active'));
@@ -706,6 +785,11 @@ function initSettings() {
             // 应用到整个页面
             document.documentElement.style.setProperty('--global-font', font);
             localStorage.setItem('selectedFont', font);
+
+            // 立即更新设置面板的字体
+            document.querySelectorAll('.settings-panel, .modal-content').forEach(el => {
+                el.style.fontFamily = font;
+            });
 
             showStatusMessage(`字体已更改为 ${option.textContent}`);
         });
@@ -721,15 +805,24 @@ function initSettings() {
         timeElement.style.fontSize = `${size}vw`;
     });
 
-    // 动画效果选择
-    document.querySelectorAll('.animation-option').forEach(option => {
-        if (option.dataset.animation) {
-            option.addEventListener('click', () => {
-                document.querySelectorAll('.animation-option').forEach(opt => opt.classList.remove('active'));
-                option.classList.add('active');
-                randomTextElement.dataset.animation = option.dataset.animation;
-            });
-        }
+    // 进入动画效果选择
+    document.querySelectorAll('[data-animation-in]').forEach(option => {
+        option.addEventListener('click', () => {
+            document.querySelectorAll('[data-animation-in]').forEach(opt => opt.classList.remove('active'));
+            option.classList.add('active');
+            animationIn = option.dataset.animationIn;
+            localStorage.setItem('animationIn', animationIn);
+        });
+    });
+
+    // 离开动画效果选择
+    document.querySelectorAll('[data-animation-out]').forEach(option => {
+        option.addEventListener('click', () => {
+            document.querySelectorAll('[data-animation-out]').forEach(opt => opt.classList.remove('active'));
+            option.classList.add('active');
+            animationOut = option.dataset.animationOut;
+            localStorage.setItem('animationOut', animationOut);
+        });
     });
 
     // 文字切换间隔
@@ -769,7 +862,7 @@ function initSettings() {
                 url,
                 custom: true
             });
-            saveData('customEngines', searchEngines.filter(engine => engine.custom));
+            saveData('customEngines', searchEngines.filter(engine => !engine.default));
 
             document.getElementById('new-engine-name').value = '';
             document.getElementById('new-engine-url').value = '';
@@ -839,6 +932,7 @@ function initSettings() {
     // 停止/开始背景切换
     document.getElementById('stop-bg-btn').addEventListener('click', () => {
         clearInterval(bgInterval);
+        bgInterval = null;
         bgSwitching = false;
         document.getElementById('bg-toggle-btn').classList.remove('btn-success');
         document.getElementById('bg-toggle-btn').classList.add('btn-danger');
@@ -849,6 +943,7 @@ function initSettings() {
     document.getElementById('bg-toggle-btn').addEventListener('click', function() {
         if (bgSwitching) {
             clearInterval(bgInterval);
+            bgInterval = null;
             bgSwitching = false;
             this.classList.remove('btn-success');
             this.classList.add('btn-danger');
@@ -957,8 +1052,10 @@ initSettings();
 
 // 设置定时器
 setInterval(updateDateTime, 1000);
-textInterval = setInterval(updateRandomText, 10000);
-bgInterval = setInterval(() => changeBackground(false), 30000);
+const textSeconds = parseInt(document.getElementById('text-change').value);
+textInterval = setInterval(updateRandomText, textSeconds * 1000);
+const bgSeconds = parseInt(document.getElementById('bg-change').value);
+bgInterval = setInterval(() => changeBackground(false), bgSeconds * 1000);
 
 // 性能优化：取消不必要的动画和监听器
 window.addEventListener('blur', () => {
