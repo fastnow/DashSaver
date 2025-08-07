@@ -1,3 +1,9 @@
+/*
+ DashSaver - A web application loader
+ Copyright (c) 2025 FastNow Studio
+ License: MIT
+ GitHub: https://github.com/fastnow/DashSaver
+*/
 * {
     margin: 0;
     padding: 0;
@@ -151,6 +157,8 @@ body {
     justify-content: center;
     text-align: center;
     color: var(--text-color);
+    opacity: 0;
+    transform: translateY(20px);
 }
 
 /* 内容区域 - 可滚动 */
@@ -419,10 +427,28 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 0.9rem;
+    font-family: inherit;
+    /* 确保字体选项使用全局字体 */
 }
 
 .font-option.active {
     background: rgba(255, 255, 255, 0.3);
+}
+
+.animation-options-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.animation-option-group {
+    flex: 1;
+}
+
+.animation-option-group h4 {
+    font-weight: 400;
+    margin-bottom: 8px;
+    font-size: 1rem;
 }
 
 .animation-selector {
@@ -437,6 +463,8 @@ body {
     background: rgba(255, 255, 255, 0.1);
     cursor: pointer;
     transition: all 0.3s ease;
+    font-family: inherit;
+    /* 确保使用全局字体 */
 }
 
 .animation-option.active {
@@ -578,6 +606,16 @@ input[type="range"] {
     }
 }
 
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
 @keyframes slideUp {
     from {
         opacity: 0;
@@ -590,6 +628,18 @@ input[type="range"] {
     }
 }
 
+@keyframes slideDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
 @keyframes typewriter {
     from {
         width: 0;
@@ -598,22 +648,6 @@ input[type="range"] {
     to {
         width: 100%;
     }
-}
-
-.fade-in {
-    animation: fadeIn 1.5s ease-in-out forwards;
-}
-
-.slide-up {
-    animation: slideUp 1s ease-out forwards;
-}
-
-.typewriter {
-    overflow: hidden;
-    white-space: nowrap;
-    animation:
-        typewriter 4s steps(40, end),
-        blink-caret 0.75s step-end infinite;
 }
 
 @keyframes blink-caret {
@@ -628,8 +662,156 @@ input[type="range"] {
     }
 }
 
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes zoomOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-180deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: rotate(0);
+    }
+}
+
+@keyframes rotateOut {
+    from {
+        opacity: 1;
+        transform: rotate(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes bounceIn {
+
+    from,
+    20%,
+    40%,
+    60%,
+    80%,
+    to {
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    }
+
+    0% {
+        opacity: 0;
+        transform: scale3d(.3, .3, .3);
+    }
+
+    20% {
+        transform: scale3d(1.1, 1.1, 1.1);
+    }
+
+    40% {
+        transform: scale3d(.9, .9, .9);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale3d(1.03, 1.03, 1.03);
+    }
+
+    80% {
+        transform: scale3d(.97, .97, .97);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+@keyframes bounceOut {
+    20% {
+        transform: scale3d(.9, .9, .9);
+    }
+
+    50%,
+    55% {
+        opacity: 1;
+        transform: scale3d(1.1, 1.1, 1.1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale3d(.3, .3, .3);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in-out forwards;
+}
+
 .fade-out {
-    animation: fadeIn 1.5s ease-in-out reverse forwards;
+    animation: fadeOut 1s ease-in-out forwards;
+}
+
+.slide-up {
+    animation: slideUp 1s ease-out forwards;
+}
+
+.slide-down {
+    animation: slideDown 1s ease-out forwards;
+}
+
+.typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    animation:
+        typewriter 4s steps(40, end),
+        blink-caret 0.75s step-end infinite;
+}
+
+.zoom-in {
+    animation: zoomIn 1s ease-out forwards;
+}
+
+.zoom-out {
+    animation: zoomOut 1s ease-out forwards;
+}
+
+.rotate-in {
+    animation: rotateIn 1s ease-out forwards;
+}
+
+.rotate-out {
+    animation: rotateOut 1s ease-out forwards;
+}
+
+.bounce-in {
+    animation: bounceIn 1s ease-out forwards;
+}
+
+.bounce-out {
+    animation: bounceOut 1s ease-out forwards;
 }
 
 /* 响应式设计 */
@@ -804,4 +986,12 @@ input[type="range"] {
 
 .text-hidden .random-text-container {
     display: none;
+}
+
+/* 版权声明 */
+.copyright-footer {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
 }
